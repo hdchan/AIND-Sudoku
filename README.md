@@ -3,11 +3,11 @@
 
 # Question 1 (Naked Twins)
 Q: How do we use constraint propagation to solve the naked twins problem?  
-A: *Student should provide answer here*
+A: *In order to solve the naked twins problem we loop through each box, obtaining the units they're contained in. For each of the units we find we loop through the values of box keys and comparing their values to see if they are both equal and have a length of 2. Once we obtain the a list of naked twin boxes, we grab the naked twin values and remove them from the current unit we are inspecting.*
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
-A: *Student should provide answer here*
+A: *There isn't much more logic needed to solve for a diagonal sudoku problem other than adding the diagonal units to our unit existing unit list. Given our original logic, it will be solvable with the diagonal units.*
 
 ### Install
 
