@@ -84,24 +84,18 @@ def display(values):
     Args:
         values(dict): The sudoku in dictionary form
     """
-    width = 1+max(len(values[s]) for s in boxes)
-    line = '+'.join(['-'*(width*3)]*3)
-    for r in letters:
-        print(''.join(values[r+c].center(width)+('|' if c in '36' else '')
-                      for c in numbers))
-        if r in 'CF': print(line)
-    return
-    # print("Displaying board")
-    # for idx, unit_row in enumerate(unit_rows):
-    #     row_string = ""
-    #     for idx2, box in enumerate(unit_row):
-    #         row_string += values[box]
-    #         row_string += (9 - len(values[box])) * ' ' + ' '
-    #         if ((idx2 + 1) % 3 == 0 and idx2 + 1 != 9):
-    #             row_string += ' | '
-    #     print('\n' + row_string)
-    #     if ((idx + 1) % 3 == 0 and idx + 1 != 9):
-    #         print('\n' + '-' * len(row_string))
+    
+    print("Displaying board")
+    for idx, unit_row in enumerate(unit_rows):
+        row_string = ""
+        for idx2, box in enumerate(unit_row):
+            row_string += values[box]
+            row_string += (9 - len(values[box])) * ' ' + ' '
+            if ((idx2 + 1) % 3 == 0 and idx2 + 1 != 9):
+                row_string += ' | '
+        print('\n' + row_string)
+        if ((idx + 1) % 3 == 0 and idx + 1 != 9):
+            print('\n' + '-' * len(row_string))
             
 
 def eliminate(values):
