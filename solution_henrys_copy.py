@@ -11,7 +11,8 @@ boxes = cross(letters, numbers)
 unit_rows = [cross(l, numbers) for l in letters]
 unit_columns = [cross(letters, n) for n in numbers]
 unit_boxes = [cross(l, n) for l in ['ABC', 'DEF', 'GHI'] for n in ['123', '456', '789']]
-all_units = unit_rows + unit_columns + unit_boxes
+unit_diagonals = [[l + numbers[idx] for idx, l in enumerate(letters)], [l + numbers[idx] for idx, l in enumerate(letters[::-1])]]
+all_units = unit_rows + unit_columns + unit_boxes + unit_diagonals
 units = dict((s, [u for u in all_units if s in u]) for s in boxes)
 peers = dict((s, set(sum(units[s],[]))-set([s])) for s in boxes)
 
