@@ -10,7 +10,7 @@ def cross(A, B):
 boxes = cross(letters, numbers)
 unit_rows = [cross(l, numbers) for l in letters]
 unit_columns = [cross(letters, n) for n in numbers]
-unit_boxes = [cross(l, n) for l in ('ABC', 'DEF', 'GHI') for n in ('123', '456', '789')]
+unit_boxes = [cross(l, n) for l in ['ABC', 'DEF', 'GHI'] for n in ['123', '456', '789']]
 all_units = unit_rows + unit_columns + unit_boxes
 units = dict((s, [u for u in all_units if s in u]) for s in boxes)
 peers = dict((s, set(sum(units[s],[]))-set([s])) for s in boxes)
@@ -40,7 +40,23 @@ def naked_twins(values):
     """
 
     # Find all instances of naked twins
+    for curr_box, units_for_box in units.items():
+        for idx, unit_for_box in enumerate(units_for_box):
+            naked_twin_boxes = [curr_box]
+            for unit_box in unit_for_box:
+                if unit_box != curr_box and values[unit_box] == values[curr_box] and len(values[unit_box]) == 2:
+                    naked_twin_boxes.append(unit_box)
+            naked_twin_values_set = set(values[curr_box])
+            if len(naked_twin_boxes) > 1:
+                for unit_box in unit_for_box:
+                    if unit_box not in naked_twin_boxes:
+                        new_possibilities = list(set(values[unit_box]).difference(naked_twin_values_set))
+                        new_possibilities.sort()
+                        values[unit_box] = "".join(new_possibilities)
+
+
     # Eliminate the naked twins as possibilities for their peers
+    return values
 
 
 
@@ -91,6 +107,7 @@ def only_choice(values):
                 if digit in values[box]:
                     dplaces.append(box)
             if (len(dplaces) == 1):
+                # assign_value(values, dplaces[0], digit)
                 values[dplaces[0]] = digit
     return values
 
@@ -100,6 +117,7 @@ def reduce_puzzle(values):
         solved_before = len([box for box, value in values.items() if len(value) == 1])
         values = eliminate(values)
         values = only_choice(values)
+        values = naked_twins(values)
         solved_after = len([box for box, value in values.items() if len(value) == 1])
         stalled = solved_after == solved_before
         if len([box for box, value in values.items() if len(value) == 0]):
@@ -137,15 +155,15 @@ def solve(grid):
     return values
 
 if __name__ == '__main__':
-    # diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
-    diag_sudoku_grid = '4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......'
+    diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
+    # diag_sudoku_grid = '4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......'
     display(solve(diag_sudoku_grid))
     
-    # try:
-    #     from visualize import visualize_assignments
-    #     visualize_assignments(assignments)
+    try:
+        from visualize import visualize_assignments
+        visualize_assignments(assignments)
 
-    # except SystemExit:
-    #     pass
-    # except:
-    #     print('We could not visualize your board due to a pygame issue. Not a problem! It is not a requirement.')
+    except SystemExit:
+        pass
+    except:
+        print('We could not visualize your board due to a pygame issue. Not a problem! It is not a requirement.')
