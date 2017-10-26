@@ -11,7 +11,7 @@ boxes = cross(letters, numbers)
 unit_rows = [cross(l, numbers) for l in letters]
 unit_columns = [cross(letters, n) for n in numbers]
 unit_boxes = [cross(l, n) for l in ['ABC', 'DEF', 'GHI'] for n in ['123', '456', '789']]
-unit_diagonals = [[l + numbers[idx] for idx, l in enumerate(letters)], [l + numbers[idx] for idx, l in enumerate(letters[::-1])]]
+unit_diagonals = [[l + numbers[idx] for idx, l in enumerate(letters)], [l + numbers[idx] for idx, l in enumerate(letters[::-1])]] # adding diagonal unit values
 all_units = unit_rows + unit_columns + unit_boxes + unit_diagonals
 units = dict((s, [u for u in all_units if s in u]) for s in boxes)
 peers = dict((s, set(sum(units[s],[]))-set([s])) for s in boxes)
@@ -41,17 +41,21 @@ def naked_twins(values):
     """
 
     # Find all instances of naked twins
-    for curr_box, units_for_box in units.items():
-        for idx, unit_for_box in enumerate(units_for_box):
-            naked_twin_boxes = [curr_box]
-            for unit_box in unit_for_box:
+    for curr_box, units_for_box in units.items(): # looking through all the hashed units for a given box
+        for idx, unit_for_box in enumerate(units_for_box): # looping through each unit
+            naked_twin_boxes = [curr_box] # we'll add the box to an array to keep as reference for later 
+            for unit_box in unit_for_box: # looping through each box
                 if unit_box != curr_box and values[unit_box] == values[curr_box] and len(values[unit_box]) == 2:
+                    # if the box we're checking have the same values
+                    # and the length of the values is two (a naked twin)
+                    # then we have a naked twin!
                     naked_twin_boxes.append(unit_box)
             naked_twin_values_set = set(values[curr_box])
             if len(naked_twin_boxes) > 1:
+                # if we have any naked twin boxes
                 for unit_box in unit_for_box:
                     if unit_box not in naked_twin_boxes:
-                        new_possibilities = list(set(values[unit_box]).difference(naked_twin_values_set))
+                        new_possibilities = list(set(values[unit_box]).difference(naked_twin_values_set)) # eliminate the naked twin values from the other boxes
                         new_possibilities.sort()
                         values[unit_box] = "".join(new_possibilities)
 
@@ -114,7 +118,7 @@ def only_choice(values):
 
 def reduce_puzzle(values):
     stalled = False
-    while not stalled:
+    while not stalled: # will keep doing this until we can't reduce any more
         solved_before = len([box for box, value in values.items() if len(value) == 1])
         values = eliminate(values)
         values = only_choice(values)
@@ -134,7 +138,7 @@ def search(values):
 
     l, b = min((len(values[box]), box) for box in boxes if len(values[box]) > 1)
     for v in values[b]:
-        temp_values = values.copy()
+        temp_values = values.copy() # we want to create a shallow copy
         temp_values[b] = v
         attempt = search(temp_values)
         if (attempt):
